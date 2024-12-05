@@ -1,6 +1,7 @@
 **Guide to Getting the Project:**
 
-* Clone the-phonebook from github repo ([joshuatonyy/phonebook-fullstack](https://github.com/joshuatonyy/phonebook-fullstack))
+* Clone the-phonebook from github repo ([https://github.com/joshuatonyy/phonebook-fullstack](https://github.com/joshuatonyy/phonebook-fullstack))  
+* Download from google drive ([https://drive.google.com/drive/folders/1VAO6uvgayOkakT5OZfkow41XU5AWWQFV?usp=sharing](https://drive.google.com/drive/folders/1VAO6uvgayOkakT5OZfkow41XU5AWWQFV?usp=sharing))
 
 **Guide to Setting Up the Backend:**
 

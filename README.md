@@ -23,7 +23,7 @@
    If you didn’t install Make, you can run these command in the terminal:
 
    * docker pull postgres:15-alpine  
-   * docker run \--name postgres15 \-p 5433:543 \-e POSTGRES\_USER=root \-e POSTGRES\_PASSWORD=password \-d postgres:15-alpine  
+   * docker run \--name postgres15 \-p 5433:5432 \-e POSTGRES\_USER=root \-e POSTGRES\_PASSWORD=password \-d postgres:15-alpine  
    * docker exec \-it postgres15 psql  
    * docker exec \-it postgres15 createdb \--username=root \--owner=root the-phonebook  
    * migrate \-path db/migrations \-database 'postgresql://root:password@localhost:5433/the-phonebook?sslmode=disable' \--verbose up  

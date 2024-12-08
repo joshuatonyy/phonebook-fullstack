@@ -26,32 +26,34 @@ export const MainPage = () => {
   const [loading, setLoading] = useState(true);
   const [isNew, setIsNew] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedContact, setSelectedContact] = useState({});
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchContacts = async () => {
-      try {
-        setLoading(true);
-        const data = await getContactsByUserID(userID);
-        if (data != null) {
-          setContacts(data);
-        }
-      } catch (error) {
-        if (error.response?.status === 401) {
-          await logout(); 
-          navigate("/login");
-        } else {
-          console.error(
-            "Error fetching contacts:",
-            error.response?.data || error.message
-          );
-          setErrorMessage("Failed to load contacts. Please try again later.");
-        }
-      } finally {
-        setLoading(false);
+  const fetchContacts = async () => {
+    try {
+      setLoading(true);
+      const data = await getContactsByUserID(userID);
+      if (data != null) {
+        setContacts(data);
       }
-    };
-    fetchContacts();
+    } catch (error) {
+      if (error.response?.status === 401) {
+        await logout();
+        navigate("/login");
+      } else {
+        console.error(
+          "Error fetching contacts:",
+          error.response?.data || error.message
+        );
+        setErrorMessage("Failed to load contacts. Please try again later.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchContacts()
   }, [userID]);
 
   const handleLogout = async () => {
@@ -96,10 +98,12 @@ export const MainPage = () => {
     }
   };
 
-  const handleEditContact = async (contactID, contactData) => {
+  const handleEditContact = async (contactData, contactID) => {
     try {
+      console.log("masuk ke edit");
       const theContact = await updateContact(contactID, contactData);
       setIsContactFormVisible(false);
+      await fetchContacts();
     } catch (error) {
       console.error(
         "Error editing contact:",
@@ -156,7 +160,7 @@ export const MainPage = () => {
       </div>
 
       <div className="mainpage__searchbar">
-        <AppleSearchBar onSearch={handleSearch}/>
+        <AppleSearchBar onSearch={handleSearch} />
       </div>
 
       {errorMessage && <p className="error-message">{errorMessage}</p>}
@@ -168,12 +172,13 @@ export const MainPage = () => {
               key={contact.id}
               name={contact.contact_name}
               phone={contact.contact_phone_number}
+              verified={contact.contact_verified}
               onDelete={() => handleDelete(contact.id)}
-              // onClickCallback={() => {
-              //   setSelectedContact(contact);
-              //   setIsNew(false);
-              //   setIsContactFormVisible(true);
-              // }}
+              onClickCallback={() => {
+                setSelectedContact(contact);
+                setIsNew(false);
+                setIsContactFormVisible(true);
+              }}
             />
           ))
         ) : (
@@ -181,17 +186,34 @@ export const MainPage = () => {
         )}
       </div>
 
-      {isContactFormVisible && isNew && (
+      {/* {isContactFormVisible && isNew && (
         <ContactForm
-          isNew={isNew}
+          isNew={true}
           onClose={handleClosePopup}
           onSubmit={handleCreateContact}
         />
-      )}
+      )} */}
 
-      {/* {isContactFormVisible && !isNew && (
+      {isContactFormVisible && (
         <ContactForm
           isNew={isNew}
+          onClose={handleClosePopup}
+          onSubmit={isNew ? handleCreateContact : handleEditContact}
+          selectedContact={!isNew ? selectedContact : null} // Only pass selectedContact if editing
+        />
+      )}
+
+      {/* {isContactFormVisible && isNew===false && (
+        <ContactForm
+          isNew={false}
+          onClose={handleClosePopup}
+          onSubmit={handleEditContact}
+        />
+      )}
+
+      {isContactFormVisible && isNew===true && (
+        <ContactForm
+          isNew={true}
           onClose={handleClosePopup}
           onSubmit={handleEditContact}
           selectedContact={selectedContact}
